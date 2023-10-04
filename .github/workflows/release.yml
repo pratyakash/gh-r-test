@@ -1,6 +1,6 @@
 name: Dev-Build
 on:
-  create:
+  push:
     tags:
       - '*'
     branches:
