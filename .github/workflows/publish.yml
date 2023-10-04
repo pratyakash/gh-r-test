@@ -44,3 +44,22 @@ jobs:
           VERSION=$(node -pe "require('./package.json').version")
           git tag "$VERSION"
           git push origin ${{ github.ref }} --tags
+
+      - name: Trigger Dev-Build Workflow
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GIT_TOKEN }}
+          script: |
+            const { data: workflows } = await github.actions.listRepoWorkflows({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+
+            const devBuildWorkflow = workflows.find(workflow => workflow.name === 'Dev-Build');
+            if (devBuildWorkflow) {
+              await github.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: devBuildWorkflow.id
+              });
+            }
