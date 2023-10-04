@@ -40,3 +40,9 @@ jobs:
           VERSION=$(node -pe "require('./package.json').version")
           git tag "$VERSION"
           git push origin ${{ github.ref }} --tags
+
+      - name: Release GH
+        uses: ncipollo/release-action@v1
+        with:
+          bodyFile: 'CHANGELOG.md'
+          tag: $VERSION

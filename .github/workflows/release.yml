@@ -1,9 +1,10 @@
 name: Dev-Build
 on:
-  workflow_run:
-    workflows: ['Release-Tag']
-    types:
-      - completed
+  create:
+    tags:
+      - '*'
+    branches:
+      - main
 
 jobs:
   build:
@@ -11,13 +12,8 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Release Tag
-        if: success()
-        run: |
-          VERSION=$(node -pe "require('./package.json').version")
       - uses: actions/checkout@v3
       - uses: ncipollo/release-action@v1
         with:
-          bodyFile: 'CHANGELOG.md'
-        env:
-          tag: $VERSION
+          artifacts: 'release.tar.gz,foo/*.txt'
+          bodyFile: 'body.md'
