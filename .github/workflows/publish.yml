@@ -42,4 +42,4 @@ jobs:
           git push origin ${{ github.ref }} --tags
           gh workflow run release.yml --ref $VERSION
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GIT_TOKEN }}
