@@ -47,3 +47,4 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.TAG_VERSION }}
+          generateReleaseNotes: true
