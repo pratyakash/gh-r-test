@@ -1,10 +1,9 @@
 name: Dev-Build
 on:
-  create:
-    tags:
-      - '*'
-    branches:
-      - main
+  workflow_run:
+    workflows: ['Release-Tag']
+    types:
+      - completed
 
 jobs:
   build:
