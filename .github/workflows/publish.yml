@@ -40,10 +40,9 @@ jobs:
           VERSION=$(node -pe "require('./package.json').version")
           git tag "$VERSION"
           git push origin ${{ github.ref }} --tags
+          echo "export TAG_VERSION=my_value" >> $GITHUB_ENV
 
       - name: Release GH
-        run: |
-          VERSION=$(node -pe "require('./package.json').version")
         uses: ncipollo/release-action@v1
         with:
-          tag: $VERSION
+          tag: $TAG_VERSION
