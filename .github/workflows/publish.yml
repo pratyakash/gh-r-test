@@ -45,4 +45,4 @@ jobs:
       - name: Release GH
         uses: ncipollo/release-action@v1
         with:
-          tag: '$TAG_VERSION'
+          tag: TAG_VERSION
