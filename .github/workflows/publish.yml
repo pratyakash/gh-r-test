@@ -12,6 +12,17 @@ jobs:
       packages: write
       contents: write
     steps:
+      - name: Check if Push Is a Merge
+        id: check_merge
+        run: |
+          if [[ "$(git log --merges -1 --pretty=%H)" == "$(git rev-parse HEAD)" ]]; then
+            echo "This push is a merge commit."
+            echo "::set-output name=is_merge::true"
+          else
+            echo "This push is not a merge commit."
+            echo "::set-output name=is_merge::false"
+          fi
+
       - name: Checkout code
         uses: actions/checkout@v2.3.4
         env:
@@ -19,23 +30,21 @@ jobs:
           NPM_AUTH_TOKEN: ${{secrets.GIT_TOKEN}}
 
       - name: Setup Node.js
+        if: steps.check_merge.outputs.is_merge == 'true'
         uses: actions/setup-node@v2
         with:
           always-auth: true
           node-version: '20.x'
           registry-url: https://npm.pkg.github.com/
 
-      - name: Check package version
-        run: |
-          VERSION=$(node -pe "require('./package.json').version")
-
       - name: Install dependencies
+        if: steps.check_merge.outputs.is_merge == 'true'
         run: yarn install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{secrets.GIT_TOKEN}}
 
       - name: Release Tag
-        if: success()
+        if: success() && steps.check_merge.outputs.is_merge == 'true'
         run: |
           VERSION=$(node -pe "require('./package.json').version")
           git tag "$VERSION"
@@ -44,6 +53,7 @@ jobs:
           echo "Using TAG_VERSION: $VERSION"
 
       - name: Release GH
+        if: steps.check_merge.outputs.is_merge == 'true'
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.TAG_VERSION }}
