@@ -1,7 +1,7 @@
 name: Release-Tag
 
 on:
-  merge:
+  push:
     branches:
       - main
 
@@ -53,7 +53,7 @@ jobs:
           echo "Using TAG_VERSION: $VERSION"
 
       - name: Release GH
-        if: steps.check_merge.outputs.is_merge == 'true'
+        if: success() && steps.check_merge.outputs.is_merge == 'true'
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.TAG_VERSION }}
