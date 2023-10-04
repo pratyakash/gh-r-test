@@ -11,7 +11,13 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Release Tag
+        if: success()
+        run: |
+          VERSION=$(node -pe "require('./package.json').version")
       - uses: actions/checkout@v3
       - uses: ncipollo/release-action@v1
         with:
           bodyFile: 'CHANGELOG.md'
+        env:
+          tag: $VERSION
