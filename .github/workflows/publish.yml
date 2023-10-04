@@ -40,3 +40,4 @@ jobs:
           VERSION=$(node -pe "require('./package.json').version")
           git tag "$VERSION"
           git push origin ${{ github.ref }} --tags
+          gh workflow run release.yml --ref $VERSION
