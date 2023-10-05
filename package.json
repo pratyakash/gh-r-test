@@ -1,6 +1,6 @@
 {
   "name": "gh-r-test",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "main": "index.js",
   "repository": "https://github.com/pratyakash/gh-r-test.git",
   "license": "MIT"
