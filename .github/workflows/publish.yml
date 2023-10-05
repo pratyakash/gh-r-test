@@ -52,10 +52,10 @@ jobs:
           VERSION=$(node -pe "require('./package.json').version")
           releases=$(echo "${{ steps.list_releases.outputs.releases }}")
           if [[ "$releases" == *"${VERSION}"* ]]; then
-            echo "Release ${release_to_check} exists!"
+            echo "Release ${VERSION} exists!"
             exit 1
           else
-            echo "Release ${release_to_check} does not exist."
+            echo "Release ${VERSION} does not exist."
           fi
 
       - name: Install dependencies
