@@ -23,17 +23,6 @@ jobs:
             echo "::set-output name=is_merge::false"
           fi
 
-      - name: Check if Release Exists
-        run: |
-          VERSION=$(node -pe "require('./package.json').version")
-          releases=$(echo "${{ steps.list_releases.outputs.releases }}")
-          if [[ "$releases" == *"${VERSION}"* ]]; then
-            echo "Release ${release_to_check} exists!"
-            exit 1
-          else
-            echo "Release ${release_to_check} does not exist."
-          fi
-
       - name: Checkout code
         uses: actions/checkout@v2.3.4
         env:
@@ -47,6 +36,17 @@ jobs:
           always-auth: true
           node-version: '20.x'
           registry-url: https://npm.pkg.github.com/
+
+      - name: Check if Release Exists
+        run: |
+          VERSION=$(node -pe "require('./package.json').version")
+          releases=$(echo "${{ steps.list_releases.outputs.releases }}")
+          if [[ "$releases" == *"${VERSION}"* ]]; then
+            echo "Release ${release_to_check} exists!"
+            exit 1
+          else
+            echo "Release ${release_to_check} does not exist."
+          fi
 
       - name: Install dependencies
         if: steps.check_merge.outputs.is_merge == 'true'
